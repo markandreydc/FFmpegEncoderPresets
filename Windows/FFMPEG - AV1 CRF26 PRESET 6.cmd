@@ -54,9 +54,9 @@ exit /b
 ffmpeg -n -i "%~1" ^
     -c:v libsvtav1 ^
     -preset 6 ^
-    -crf 32 ^
+    -crf 26 ^
     -c:a copy ^
-    "%~dpn1 [AV1 CRF32 P6].mkv"
+    "%~dpn1 [AV1 CRF26 P6].mkv"
 
 if !errorlevel! equ 0 (
     title [!count!/!total!] Done: %~nx1

@@ -5,31 +5,41 @@ set /a count=0
 set /a total=0
 
 if "%~1"=="" (
-    for %%F in (*.mp4 *.mov *.mkv *.avi *.m4v *.webm) do if exist "%%F" set /a total+=1
     for %%F in (*.mp4 *.mov *.mkv *.avi *.m4v *.webm) do if exist "%%F" (
-        set /a count+=1
-        title [!count!/!total!] Converting: %%~nxF
-        call :convert "%%~fF"
+        echo %%~nxF | findstr /i /c:"[AV1" >nul || set /a total+=1
+    )
+    for %%F in (*.mp4 *.mov *.mkv *.avi *.m4v *.webm) do if exist "%%F" (
+        echo %%~nxF | findstr /i /c:"[AV1" >nul || (
+            set /a count+=1
+            title [!count!/!total!] Converting: %%~nxF
+            call :convert "%%~fF"
+        )
     )
 ) else (
     for %%A in (%*) do (
         if exist "%%~fA\" (
-            for %%F in ("%%~fA\*.mp4" "%%~fA\*.mov" "%%~fA\*.mkv" "%%~fA\*.avi" "%%~fA\*.m4v" "%%~fA\*.webm") do set /a total+=1
+            for %%F in ("%%~fA\*.mp4" "%%~fA\*.mov" "%%~fA\*.mkv" "%%~fA\*.avi" "%%~fA\*.m4v" "%%~fA\*.webm") do (
+                echo %%~nxF | findstr /i /c:"[AV1" >nul || set /a total+=1
+            )
         ) else if exist "%%~fA" (
-            set /a total+=1
+            echo %%~nxA | findstr /i /c:"[AV1" >nul || set /a total+=1
         )
     )
     for %%A in (%*) do (
         if exist "%%~fA\" (
             for %%F in ("%%~fA\*.mp4" "%%~fA\*.mov" "%%~fA\*.mkv" "%%~fA\*.avi" "%%~fA\*.m4v" "%%~fA\*.webm") do (
-                set /a count+=1
-                title [!count!/!total!] Converting: %%~nxF
-                call :convert "%%~fF"
+                echo %%~nxF | findstr /i /c:"[AV1" >nul || (
+                    set /a count+=1
+                    title [!count!/!total!] Converting: %%~nxF
+                    call :convert "%%~fF"
+                )
             )
         ) else if exist "%%~fA" (
-            set /a count+=1
-            title [!count!/!total!] Converting: %%~nxA
-            call :convert "%%~fA"
+            echo %%~nxA | findstr /i /c:"[AV1" >nul || (
+                set /a count+=1
+                title [!count!/!total!] Converting: %%~nxA
+                call :convert "%%~fA"
+            )
         )
     )
 )
